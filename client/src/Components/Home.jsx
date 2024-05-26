@@ -3,16 +3,18 @@ import Papa from "papaparse";
 import LineGraph from "./LineGraph";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
 
 const Home = () => {
   const [data, setData] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [loading, setLoading] = useState(false);
   const [sortOrder2, setSortOrder2] = useState("asc");
   const [popup, setPopup] = useState(false);
   const [temp, setTemp] = useState({});
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
-  const [answers, setAnswers] = useState([]);
+  const [answers, setAnswers] = useState("");
   const [newData, setNewData] = useState([
     { year: "2024", data: { totalJobs: 0, totalSalary: 0, jobTitile: {} } },
     { year: "2023", data: { totalJobs: 0, totalSalary: 0, jobTitile: {} } },
@@ -90,15 +92,24 @@ const Home = () => {
     setSearch("");
   };
 
-  const handleMessage = () => {
-    setMessage("");
+  const handleMessage = async () => {
     // Api call to open Ai to get Answer
-    // try {
-    //   const {answer} = axios.post("url" , {message})
-    //   setAnswers([...answers , answer])
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/getchatdata",
+        {
+          message,
+        }
+      );
+      setAnswers(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setMessage("");
+    }
   };
   return (
     <div className="md:grid md:grid-cols-2 sm:grid sm:grid-row-2  gap-1 h-screen pt-10 md:overflow-hidden ">
@@ -257,18 +268,29 @@ const Home = () => {
               className="bg-white w-3/4 h-3/4 p-5 overflow-y-auto flex flex-col  rounded-lg 
             "
             >
-              <div className="w-full h-3/4 flex items-center justify-center">
-                <h1 className="text-3xl  text-slate-300">No Messages Yet</h1>
-                {/* Map the Answers Array */}
+              <div className="w-full h-3/4 p-4 px-10  overflow-y-auto">
+                {answers === "" && loading === false && (
+                  <h1 className="text-3xl  text-slate-300">No Messages Yet</h1>
+                )}
+                {loading ? (
+                  <h1 className="text-3xl  text-slate-300">Loading ...</h1>
+                ) : (
+                  <p className="typing">{answers}</p>
+                )}
               </div>
               <div className="w-full h-1/3 flex items-end ">
                 <input
                   type="text"
                   placeholder="Send Message"
                   className="p-4 w-full h-10 border border-slate-400 "
+                  value={message}
                   onChange={(e) => setMessage(e.target.value)}
                 />
-                <button className="p-3" onClick={handleMessage}>
+                <button
+                  className="p-3"
+                  onClick={handleMessage}
+                  disabled={loading}
+                >
                   <SendIcon />
                 </button>
               </div>

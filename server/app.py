@@ -1,4 +1,5 @@
 from flask import Flask , jsonify , request
+from flask_cors import CORS
 import os
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.vectorstores import FAISS
@@ -11,6 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+
+CORS(app , resources={r"/api/*": {"origins": "*"}})
 
 loader = CSVLoader(file_path="salaries.csv")
 documents = loader.load()
@@ -58,10 +61,9 @@ chain = LLMChain(llm=llm, prompt=prompt)
 @app.route('/api/getchatdata' , methods = ["POST"])
 def generate_response():
     message = request.json.get('message')
+    print(message)
     data = retrieve_info(message)
     response = chain.run(message=message, data=data)
-    return response
+    return jsonify(response)
 
 
-if __name__ == "__main__" :
-    app.run(debug=True)
