@@ -63,7 +63,7 @@ const LineGraph = ({ newData }) => {
         <div className="w-3/4 h-full m-5">
           <Line data={salaries} />
         </div>
-        <div className="w-3/4 h-3/4  m-5 mb-15 pb-5">
+        <div className="w-3/4 h-3/4  m-5 mb-15 md:pb-20">
           <Bar data={Jobs} />
         </div>
       </div>

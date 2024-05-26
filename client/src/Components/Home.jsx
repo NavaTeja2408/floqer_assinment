@@ -12,6 +12,7 @@ const Home = () => {
   const [temp, setTemp] = useState({});
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
+  const [answers, setAnswers] = useState([]);
   const [newData, setNewData] = useState([
     { year: "2024", data: { totalJobs: 0, totalSalary: 0, jobTitile: {} } },
     { year: "2023", data: { totalJobs: 0, totalSalary: 0, jobTitile: {} } },
@@ -92,9 +93,15 @@ const Home = () => {
   const handleMessage = () => {
     setMessage("");
     // Api call to open Ai to get Answer
+    // try {
+    //   const {answer} = axios.post("url" , {message})
+    //   setAnswers([...answers , answer])
+    // } catch (error) {
+    //   console.log(error)
+    // }
   };
   return (
-    <div className="md:grid md:grid-cols-2 sm:grid sm:grid-row-2  gap-1 h-screen pt-10 overflow-hidden ">
+    <div className="md:grid md:grid-cols-2 sm:grid sm:grid-row-2  gap-1 h-screen pt-10 md:overflow-hidden ">
       <div className="w-full h-14  bg-gradient-to-r from-blue-600  to-sky-300 fixed top-0 flex items-center justify-center">
         <h1 className="text-3xl text-white  font-bold">Floqer's Assignment</h1>
       </div>
@@ -252,6 +259,7 @@ const Home = () => {
             >
               <div className="w-full h-3/4 flex items-center justify-center">
                 <h1 className="text-3xl  text-slate-300">No Messages Yet</h1>
+                {/* Map the Answers Array */}
               </div>
               <div className="w-full h-1/3 flex items-end ">
                 <input
@@ -272,7 +280,7 @@ const Home = () => {
         <LineGraph newData={newData} />
       </div>
       <button
-        className="absolute bottom-10 left-5 p-2 px-6 rounded-xl bg-orange-400 text-white hover:bg-orange-600 "
+        className="fixed bottom-10 left-5 p-2 px-6 rounded-xl bg-orange-400 text-white hover:bg-orange-600 "
         onClick={() => setChatPopUp(true)}
       >
         ChatBot
