@@ -6,9 +6,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
-from dotenv import load_dotenv
 
-load_dotenv()
 
 app = Flask(__name__)
 
